@@ -25,7 +25,7 @@ makeinstall_target() {
 	chmod 0755 ${INSTALL}/usr/bin/*
 }
 
-post_install() {  
+post_install() {
 	enable_service volume.service
 	enable_service headphones.service
 	enable_service battery.service

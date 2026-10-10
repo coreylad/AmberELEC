@@ -15,7 +15,7 @@ if [ "$DEVICE" = "SZDiiER D007 Plus" ]; then
     echo 11 > /sys/class/gpio/export
     echo out > /sys/class/gpio/gpio11/direction
     # enable speaker
-    # echo 1 > /sys/class/gpio/gpio11/value 
+    # echo 1 > /sys/class/gpio/gpio11/value
 
     # Switch to headphones if we have them already connected at boot
     GPIO=$(cat /sys/class/gpio/gpio75/value)
@@ -30,7 +30,7 @@ if [ "$DEVICE" = "SZDiiER D007 Plus" ]; then
     evtest "${DEVICE}" | while read line; do
         case $line in
         (${HP_ON})
-        echo 0 > /sys/class/gpio/gpio11/value 
+        echo 0 > /sys/class/gpio/gpio11/value
         set_ee_setting "audio.device" "headphone"
         ;;
         (${HP_OFF})
@@ -49,7 +49,7 @@ elif [ "$DEVICE" = "Magicx XU10" ]; then
     /usr/bin/odroidgoa_utils.sh vol $(get_ee_setting "audio.volume")
     fi
 
-    # Headphone sensing 
+    # Headphone sensing
     DEVICE='/dev/input/event1'
 
     HP_ON='*(SW_HEADPHONE_INSERT), value 1*'

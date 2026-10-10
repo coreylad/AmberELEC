@@ -61,7 +61,7 @@ MINVOL=0
 	[ "$STEPVOL" -le "$MINVOL" ] && STEPVOL="$MINVOL"
 	amixer set 'Playback' ${STEPVOL}%
 	set_ee_setting "audio.volume" ${STEPVOL}
-  fi    
+  fi
 
 if [ "${1}" == "bright" ]; then
 STEPS="1"
@@ -81,5 +81,3 @@ MINBRIGHT="2"
 	echo "${STEPBRIGHT}" > /sys/class/backlight/backlight/brightness
 	set_ee_setting "brightness.level" $(cat /sys/class/backlight/backlight/brightness)
 fi
-
-

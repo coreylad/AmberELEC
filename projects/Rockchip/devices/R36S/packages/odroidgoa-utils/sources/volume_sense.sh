@@ -63,10 +63,10 @@ else
 fi
 
 done
-(  
+(
    evtest "${RG351_DEVICE}" &
    evtest "${RG351_CONTROLLER_DEVICE}" 2>&1 &
-   wait 
+   wait
 ) | while read line; do
     case $line in
         (${CONTROLLER_DISCONNECTED})
@@ -94,7 +94,7 @@ done
             DOWN="-"
             REPEAT_MOD=${VOLUME_REPEAT_MOD}
           fi
-          
+
           REPEAT_NUM=$(( ${REPEAT_NUM} + 1 ))
 
           # This isn't time to evaluate repeat so just skip
@@ -107,7 +107,7 @@ done
              INCREMENT_AMOUNT=5
           elif [[ "${REPEAT_NUM}" -gt "25" ]]; then
              INCREMENT_AMOUNT=2
-          fi   
+          fi
           # Run the commands to adjust volume/brightness
           if [[ "${line}" == ${VOL_UP} ]]; then
             ${COMMAND} ${UP} ${INCREMENT_AMOUNT} > /dev/null
@@ -116,7 +116,7 @@ done
           fi
         ;;
 
-        (${V_FUNC_KEY_EVENT}) 
+        (${V_FUNC_KEY_EVENT})
 
           # We don't care about 'Fn' key repeats - continue
           if [[ "$line" == ${REPEAT_PRESS} ]]; then
