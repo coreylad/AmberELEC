@@ -16,14 +16,14 @@ PKG_BUILD_FLAGS="+lto-parallel"
 
 ##########################################################################################################
 # Uncomment the following lines (PKG_SITE, PKG_URL) to build locally from a git clone
-# of emulationstation in your work directory.  Works with docker too if it's in the work directory.
+# of emulationstation in your work directory. Update PKG_SITE to its absolute path.
 # ------------------------
 # To ensure the source gets updated , you must remove source before each build or it will not get rebuilt.
 # So build similar to this:
 #    rm -rf ./sources/emulationstation/ \
-#      && DOCKER_WORK_DIR=/work DEVICE=RG351V ARCH=aarch64 PACKAGE=emulationstation make docker-package-clean docker-package
+#      && DEVICE=RG351V ARCH=aarch64 PACKAGE=emulationstation make package-clean package
 ##########################################################################################################
-#PKG_SITE="file:///work/emulationstation"
+#PKG_SITE="file://${PWD}/emulationstation"
 #PKG_URL="${PKG_SITE}"
 
 # themes for Emulationstation

@@ -33,7 +33,7 @@ if [ -n "${BASE_TEMPLATE_DEVICE}" ]; then
     echo "==> ERROR: Required base toolchain template for '${DEVICE}' (${ARCH}) is missing!" >&2
     echo "==> Expected path: ${BASE_TEMPLATE_DIR}" >&2
     echo "==> Please build the base toolchain first via:" >&2
-    echo "==>   make toolchain-${BASE_TEMPLATE_DEVICE}  (or make docker-toolchain-${BASE_TEMPLATE_DEVICE})" >&2
+    echo "==>   make toolchain-${BASE_TEMPLATE_DEVICE}" >&2
     echo "==========================================================================" >&2
     exit 1
   fi

@@ -18,13 +18,13 @@ PKG_TOOLCHAIN="manual"
 
 ##########################################################################################################
 #  LOCAL DEV - if you would like to make changes to webui locally - uncomment the following param PKG_URL
-#  and build as follows.  If you don't use docker and DOCKER_WORK_DIR=/work, update PKG_URL to match your system
+#  and build as follows. Update PKG_URL to match the absolute path on your system.
 # ------------------------
 # To ensure the source gets updated , you must remove source before each build or it will not get rebuilt.
 # So build similar to this:
-#   rm -rf ./sources/webui/ && DOCKER_WORK_DIR=/work DEVICE=RG552 ARCH=aarch64 PACKAGE=webui make docker-package-clean docker-package
+#   rm -rf ./sources/webui/ && DEVICE=RG552 ARCH=aarch64 PACKAGE=webui make package-clean package
 ##########################################################################################################
-#PKG_URL="file:///work/webui"
+#PKG_URL="file://${PWD}/webui"
 
 makeinstall_target() {
   WEB_UI_DIR="${INSTALL}/usr/share/webui"
