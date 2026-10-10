@@ -1,7 +1,18 @@
-# R36S Cloud Build
+# R36S Builds
 
-[build-r36s.yaml](build-r36s.yaml) is the only build workflow. It runs on every
-push and can also be started from **Actions → build-r36s → Run workflow**.
+## Local Windows build (recommended for this fork)
+
+Build the image on your own PC using [the Windows WSL 2 guide](../README.md#building-on-windows-with-wsl-2).
+It covers WSL and Docker setup, building the RK3326 toolchain and R36S image,
+and copying the resulting `.img` to Windows for flashing. No GitHub Enterprise
+subscription or Actions runner is needed. Output is saved locally under
+`release/aarch64/R36S/`.
+
+## Optional cloud build
+
+[build-r36s.yaml](build-r36s.yaml) is manual-only and does not run on pushes.
+Use **Actions → build-r36s → Run workflow** only if you already have access to
+a suitably provisioned larger runner.
 It builds the RK3326 toolchain followed by the R36S image in a Docker container
 built from this repository's Dockerfile. No prepublished container or self-hosted
 `main` runner is required.
@@ -21,7 +32,7 @@ separately; simply changing the workflow does not provision a runner.
 See [GitHub's larger runner documentation](https://docs.github.com/en/actions/using-github-hosted-runners/using-larger-runners).
 
 For manual runs, the **runner** input accepts an alternative configured runner
-name. Push builds use `ubuntu-22.04-16core`. If a job stays queued, check that the
+name. The default is `ubuntu-22.04-16core`. If a job stays queued, check that the
 runner exists, is available, and its runner group allows this repository.
 The workflow checks available disk space and memory before starting compilation.
 

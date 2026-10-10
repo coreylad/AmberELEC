@@ -1,7 +1,6 @@
 name: build-r36s
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       runner:
