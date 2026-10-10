@@ -32,6 +32,7 @@ world:
 	DEVICE=RG351P ARCH=aarch64 ./scripts/build_distro
 	DEVICE=RG351V ARCH=aarch64 ./scripts/build_distro
 	DEVICE=RG351MP ARCH=aarch64 ./scripts/build_distro
+	DEVICE=R36S ARCH=aarch64 ./scripts/build_distro
 	DEVICE=RG552 ARCH=aarch64 ./scripts/build_distro
 
 RG351P:
@@ -42,6 +43,9 @@ RG351V:
 
 RG351MP:
 	DEVICE=RG351MP ARCH=aarch64 ./scripts/build_distro
+
+R36S:
+	DEVICE=R36S ARCH=aarch64 ./scripts/build_distro
 
 RG552:
 	DEVICE=RG552 ARCH=aarch64 ./scripts/build_distro
@@ -139,4 +143,3 @@ docker-image-push:
 # Wire up docker to call equivalent make files using % to match and $* to pass the value matched by %
 docker-%:
 	$(SUDO) $(DOCKER_CMD) run $(PODMAN_ARGS) $(INTERACTIVE) --init --env-file .env --rm --user $(UID):$(GID) $(DEVELOPER_SETTINGS) -v $(PWD):$(DOCKER_WORK_DIR) -v $(HOME)/.cache:$(HOME)/.cache -w $(DOCKER_WORK_DIR) $(DOCKER_IMAGE) $(COMMAND)
-

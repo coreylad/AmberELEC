@@ -76,7 +76,7 @@ makeinstall_target() {
 
   if [ "${DEVICE}" == "RG351P" ]; then
     cp ${INSTALL}/usr/config/distribution/configs/distribution.conf.351p ${INSTALL}/usr/config/distribution/configs/distribution.conf
-  elif  [ "${DEVICE}" == "RG351V" ] || [ "${DEVICE}" == "RG351MP" ]; then
+  elif  [ "${DEVICE}" == "RG351V" ] || [ "${DEVICE}" == "RG351MP" ] || [ "${DEVICE}" == "R36S" ]; then
     cp ${INSTALL}/usr/config/distribution/configs/distribution.conf.351v ${INSTALL}/usr/config/distribution/configs/distribution.conf
   elif [ "${DEVICE}" == "RG552" ]; then
     cp ${INSTALL}/usr/config/distribution/configs/distribution.conf.552  ${INSTALL}/usr/config/distribution/configs/distribution.conf
@@ -103,7 +103,7 @@ makeinstall_target() {
   mkdir -p ${INSTALL}/usr/share/retroarch-overlays
   if [ "${DEVICE}" == "RG351P" ]; then
     cp -r ${PKG_DIR}/overlay-p/* ${INSTALL}/usr/share/retroarch-overlays
-  elif [ "${DEVICE}" == "RG351V" ] || [ "${DEVICE}" == "RG351MP" ]; then
+  elif [ "${DEVICE}" == "RG351V" ] || [ "${DEVICE}" == "RG351MP" ] || [ "${DEVICE}" == "R36S" ]; then
     cp -r ${PKG_DIR}/overlay-v/* ${INSTALL}/usr/share/retroarch-overlays
   elif [ "${DEVICE}" == "RG552" ]; then
     cp -r ${PKG_DIR}/overlay-552/* ${INSTALL}/usr/share/retroarch-overlays
@@ -141,7 +141,7 @@ post_install() {
     enable_service fan_control.service
   fi
 
-  if [[ "${DEVICE}" =~ "RG351" ]]; then
+  if [[ "${DEVICE}" =~ "RG351" ]] || [[ "${DEVICE}" == "R36S" ]]; then
     cp -f  ${PKG_DIR}/clocks/RK3326/clocklimits ${INSTALL}/etc
   elif [[ "${DEVICE}" == "RG552" ]]; then
     cp -f  ${PKG_DIR}/clocks/RK3399/clocklimits ${INSTALL}/etc

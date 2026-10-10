@@ -33,6 +33,9 @@ mkdir -p $RELEASE_DIR/3rdparty/bootloader
   elif [ "$DEVICE" == "RG351MP" ]; then
     cp -f $UBOOT_DTS_DIR/rg351mp-uboot.dtb $RELEASE_DIR/3rdparty/bootloader
   fi
+  if [ "$DEVICE" == "R36S" ]; then
+    cp -f "$ROOT/soysauce/rk3326-r35s-linux.dtb" "$RELEASE_DIR/3rdparty/bootloader"
+  fi
   
 LE_TMP=$(mktemp -d)
 mkdir -p "${LE_TMP}/extlinux" 
