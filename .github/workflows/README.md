@@ -1,42 +1,38 @@
-# Build Overview
-The build server is a single server with solid state disks (SSDs).  It runs two self-hosted Github action runners to perform builds. Conceptually, this is like using free GitHub actions except we register our own server to run the build. Using self-hosted runners is required as all known free options to run builds are too small (typically in disk size) to run the AmberELEC build.
+# R36S Cloud Build
 
-A major advantage of using GitHub actions with a self hosted server - as opposed to a full self hosted build system like Jenkins - is that the server is effectively stateless. Build folders are cached, but can easily be rebuilt, making it easy to replace the server.
+[build-r36s.yaml](build-r36s.yaml) is the only build workflow. It runs on every
+push and can also be started from **Actions → build-r36s → Run workflow**.
+It builds the RK3326 toolchain followed by the R36S image in a Docker container
+built from this repository's Dockerfile. No prepublished container or self-hosted
+`main` runner is required.
 
-**Runners**
-- **main** Driven by [build-main.yaml](build-main.yaml)
-  - **Logic**: An 'incremental' build (no `make clean`) is run on every commit to `main`.  All *build.* directories are saved between builds.
-  - If a 'full' build is required.  `make clean` can be run manually by AmberELEC admins via the Github UI.  Driven by: [clean-main.yaml](clean-main.yaml)
-- **Pull Requests**. Driven by [build-pr.yaml](build-pr.yaml)
-  - **Logic**: An 'incremental' build (no `make clean`) is run on every PR which is from a previous committer. 
-    - Limiting the PRs built is done for security to ensure randomly submitted PRs are not built without some level of review (only AmberELEC admins are allowed to request reviewers)
-  - If a 'full' PR build is required `make clean` can be run manually by AmberELEC admins for the PR builder.  Driven by: [clean-pr.yaml](clean-pr.yaml)
+## Cloud runner setup
 
-This two-runner design is to ensure that 'main' builds are not clogged up by random PR pushes, etc.  
+AmberELEC recommends at least 4 CPU cores, 16 GB RAM, and 200 GB free SSD space.
+Standard free GitHub-hosted runners do not meet these requirements. This workflow
+uses a **larger GitHub-hosted Linux x64 runner** named `ubuntu-22.04-16core`.
+That name is a configured runner name, not a standard GitHub runner label.
 
-**NOTE**: Only a single build will be queued for a given PR or main at a time.
+Before building, an administrator must provision that runner under the GitHub
+organization's **Settings → Actions → Runners → New GitHub-hosted runner**, choose
+Ubuntu 22.04 x64 with sufficient resources, and grant this repository access to its
+runner group. Larger runners require an eligible organization plan and are billed
+separately; simply changing the workflow does not provision a runner.
+See [GitHub's larger runner documentation](https://docs.github.com/en/actions/using-github-hosted-runners/using-larger-runners).
 
-### Dev Artifacts
-The 'main' branch publishes `.img.gz` and `.tar` updates for every build. They are split into packages for supported devices. The dedicated `build-r36s.yaml` workflow also builds the R36S `.img.gz` on every push and publishes it as a workflow artifact.
-Unfortunately, GitHub actions currently has a limitation that all artifacts must be zipped.  This means that the .tar.gz and .tar file will be inside a zip. 
-This is primarily a GitHub UI limitation and may be addressed in the future as artifacts are stored separately and the zip is dynamically created. 
-See: https://github.com/actions/upload-artifact#zipped-artifact-downloads
+For manual runs, the **runner** input accepts an alternative configured runner
+name. Push builds use `ubuntu-22.04-16core`. If a job stays queued, check that the
+runner exists, is available, and its runner group allows this repository.
+The workflow checks available disk space and memory before starting compilation.
 
-PR's currently only publish `.tar` updates as fresh flashing from the `.img.gz` is not typically needed.  This is just
-done to speed up PR builds.
+Each run is a clean build with a six-hour job timeout. There is no separate
+Docker publishing, cleanup, multi-device, or release workflow.
 
-# Hosting Options and Alternatives
-It is not ideal to require a non-free build system for an open source project.  However, at this time, it appears to 
-be the only realistic option due to the large build size (~160GB) combined with the long duration for full builds (~5 hours).
+## Download the image
 
-See: [Hosting Options](docs/hosting-options.md) for more details on why the current design (single server) along with
-GitHub actions was chosen.
+Open a successful workflow run and download **AmberELEC-R36S-&lt;commit SHA&gt;**
+from its **Artifacts** section. Extract the ZIP to obtain the uncompressed
+`.img` ready to flash to a microSD card. Artifacts are retained for 30 days.
+The build normally emits `.img.gz`; the workflow decompresses it before uploading.
 
-# Build Server Setup
-Due to requiring a build server - as opposed to cloud/hosted options - it is imporant to ensure that 
-the build server itself can be easily swapped out for another server.  The following link documents how to create a new build server.
-
-See: [Build Server Setup](docs/build-server-setup.md) for more details on provisioning the build server and configuring GitHub.
-
-# Troubleshooting Build Server issues
-If builds aren't working correctly and you have permissions to AmberELEC GitHub and/or the build server, see: [Build Server Troubleshooting](docs/build-server-troubleshooting.md)
+These development images are unstable and intended for testing.

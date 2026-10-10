@@ -11,8 +11,12 @@ PKG_LONGDESC="ARM 32bit bundles for aarch64"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {
+  local bundle_device="${DEVICE}"
+  if [ "${DEVICE}" = "R36S" ]; then
+    bundle_device="RG351MP"
+  fi
   mkdir -p ${INSTALL}/usr/lib32
   cd ${PKG_BUILD}
-  tar xvfz lib32_${DEVICE}.tar.gz
+  tar xvfz lib32_${bundle_device}.tar.gz
   cp -rfv usr/lib32/* ${INSTALL}/usr/lib32
 }
