@@ -3,6 +3,12 @@ name: build-r36s
 on:
   push:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: GitHub-hosted Linux x64 runner with at least 16 GB RAM and 200 GB free disk
+        required: true
+        default: ubuntu-22.04-16core
+        type: string
 
 permissions:
   contents: read
@@ -12,27 +18,54 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}-build:latest
+  DOCKER_IMAGE: amberelec-r36s-build:local
+  DOCKER_WORK_DIR: /work
+  CONCURRENCY_MAKE_LEVEL: "4"
+  THREADCOUNT: "4"
 
 jobs:
   build-r36s:
     timeout-minutes: 360
-    runs-on: main
+    runs-on: ${{ inputs.runner || 'ubuntu-22.04-16core' }}
     steps:
       - uses: actions/checkout@v7
         with:
-          clean: false
+          persist-credentials: false
+      - name: Check cloud runner resources
+        run: |
+          available_kb=$(df --output=avail "$GITHUB_WORKSPACE" | tail -n 1)
+          memory_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+          if (( available_kb < 200 * 1024 * 1024 || memory_kb < 15 * 1024 * 1024 )); then
+            echo "::error::Use a larger GitHub-hosted Linux x64 runner with at least 16 GB RAM and 200 GB free disk."
+            exit 1
+          fi
+          docker info
+      - name: Build Docker environment
+        run: make docker-image-build
       - name: Build RK3326 toolchain
         run: |
           set -e
-          make DOCKER_WORK_DIR=/work docker-toolchain-RK3326
+          make docker-toolchain-RK3326
       - name: Build R36S image
         run: |
           set -e
-          make DOCKER_WORK_DIR=/work docker-R36S
+          make docker-R36S
+      - name: Prepare uncompressed R36S image
+        run: |
+          shopt -s nullglob
+          images=(release/aarch64/R36S/*.img.gz)
+          if (( ${#images[@]} == 0 )); then
+            echo "::error::The build did not produce an R36S image."
+            exit 1
+          fi
+          for image in "${images[@]}"; do
+            gzip --decompress "$image"
+          done
       - name: Publish R36S image artifact
         uses: actions/upload-artifact@v7
         with:
           name: AmberELEC-R36S-${{ github.sha }}
-          path: release/aarch64/R36S/*.img.gz
+          path: release/aarch64/R36S/*.img
+          compression-level: 6
+          retention-days: 30
           if-no-files-found: error
