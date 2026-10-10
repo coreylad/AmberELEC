@@ -55,6 +55,12 @@ elif [ $DEVICE = "RG351V" ]; then
 sysboot mmc 1:1 any \${scriptaddr} /extlinux/rk3326-rg351v-linux.dtb.conf
 
 EOF
+elif [ $DEVICE = "R36S" ]; then
+  cat >>$INSTALL/usr/share/bootloader/boot.ini <<EOF
+
+sysboot mmc 1:1 any \${scriptaddr} /extlinux/rk3326-r35s-linux.dtb.conf
+
+EOF
 else
   cat >>$INSTALL/usr/share/bootloader/boot.ini <<EOF
 

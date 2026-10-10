@@ -1,0 +1,35 @@
+name: build-r36s
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: build-r36s-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOCKER_IMAGE: ghcr.io/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}-build:latest
+
+jobs:
+  build-r36s:
+    timeout-minutes: 360
+    runs-on: main
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          clean: false
+      - name: Build RK3326 toolchain
+        run: |
+          set -e
+          make DOCKER_WORK_DIR=/work docker-toolchain-RK3326
+      - name: Build R36S image
+        run: |
+          set -e
+          make DOCKER_WORK_DIR=/work docker-R36S
+      - name: Publish R36S image artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: AmberELEC-R36S-${{ github.sha }}
+          path: release/aarch64/R36S/*.img.gz
+          if-no-files-found: error

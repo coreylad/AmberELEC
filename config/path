@@ -50,7 +50,7 @@ if [ -z "${AMBERELEC_LOCK_HELD}" ] && [ "${SCRIPT_NAME}" != "clean" ]; then
 
   # --- Seed Device Builds from prebuilt Base Toolchain (RK3326 / RK3399 / RK3566) ---
   BASE_TEMPLATE_DEVICE=""
-  if [[ "${DEVICE}" =~ ^(RG351P|RG351V|RG351MP)$ ]]; then
+  if [[ "${DEVICE}" =~ ^(RG351P|RG351V|RG351MP|R36S)$ ]]; then
     BASE_TEMPLATE_DEVICE="RK3326"
   elif [[ "${DEVICE}" =~ ^(RG552)$ ]]; then
     BASE_TEMPLATE_DEVICE="RK3399"

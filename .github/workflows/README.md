@@ -17,7 +17,7 @@ This two-runner design is to ensure that 'main' builds are not clogged up by ran
 **NOTE**: Only a single build will be queued for a given PR or main at a time.
 
 ### Dev Artifacts
-The 'main' branch publishes `.img.gz` and `.tar` updates for every build.  They are split into two packages, one for RG351P and another RG351V.  
+The 'main' branch publishes `.img.gz` and `.tar` updates for every build. They are split into packages for supported devices. The dedicated `build-r36s.yaml` workflow also builds the R36S `.img.gz` on every push and publishes it as a workflow artifact.
 Unfortunately, GitHub actions currently has a limitation that all artifacts must be zipped.  This means that the .tar.gz and .tar file will be inside a zip. 
 This is primarily a GitHub UI limitation and may be addressed in the future as artifacts are stored separately and the zip is dynamically created. 
 See: https://github.com/actions/upload-artifact#zipped-artifact-downloads

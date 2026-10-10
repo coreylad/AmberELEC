@@ -1,0 +1,8 @@
+################################################################################
+# R36S shares the RK3326 platform and userspace defaults of the RG351MP.
+################################################################################
+
+. "${PROJECT_DIR}/${PROJECT}/devices/RG351MP/options"
+
+LINUX="RG351MP"
+UBOOT_SYSTEM="r36s"

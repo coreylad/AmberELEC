@@ -14,7 +14,7 @@ PKG_STAMP="${UBOOT_SYSTEM}"
 PKG_NEED_UNPACK="${PROJECT_DIR}/${PROJECT}/bootloader"
 [ -n "${DEVICE}" ] && PKG_NEED_UNPACK+=" ${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/bootloader"
 
-if [[ "${DEVICE}" =~ RG351 ]]; then
+if [[ "${DEVICE}" =~ (RG351|R36S) ]]; then
   PKG_VERSION="cc3640ed903c6ee62398da9f021ff9b2fed65b30"
   PKG_GIT_CLONE_SINGLE="yes"
   PKG_GIT_CLONE_DEPTH="1"
@@ -49,7 +49,7 @@ post_patch() {
 }
 
 make_target() {
-  if [[ "${DEVICE}" =~ RG351 ]]; then
+  if [[ "${DEVICE}" =~ (RG351|R36S) ]]; then
     sed -i 's/-T \$(EFI_LDS_PATH) //' scripts/Makefile.lib
   fi
   sed -i -e '/	kwbimage.o..*$/d' tools/Makefile
@@ -65,7 +65,7 @@ make_target() {
     fi
     DEBUG=${PKG_DEBUG} CROSS_COMPILE="${TARGET_KERNEL_PREFIX}" LDFLAGS="" ARCH=arm make mrproper
     DEBUG=${PKG_DEBUG} CROSS_COMPILE="${TARGET_KERNEL_PREFIX}" LDFLAGS="" ARCH=arm make $(${ROOT}/${SCRIPTS}/uboot_helper ${PROJECT} ${DEVICE} ${UBOOT_SYSTEM} config)
-    if [[ "${DEVICE}" =~ RG351 ]]; then
+    if [[ "${DEVICE}" =~ (RG351|R36S) ]]; then
       DEBUG=${PKG_DEBUG} CROSS_COMPILE="${TARGET_KERNEL_PREFIX}" LDFLAGS="" ARCH=arm _python_sysroot="${TOOLCHAIN}" _python_prefix=/ _python_exec_prefix=/ make HOSTCC="${HOST_CC}" HOSTLDFLAGS="-L${TOOLCHAIN}/lib" HOSTSTRIP="true" CONFIG_MKIMAGE_DTC_PATH="scripts/dtc/dtc"
     elif [[ "${DEVICE}" =~ RG552 ]]; then
       DEBUG=${PKG_DEBUG} CROSS_COMPILE="${TARGET_KERNEL_PREFIX}" LDFLAGS="" ARCH=arm _python_sysroot="${TOOLCHAIN}" _python_prefix=/ _python_exec_prefix=/ LD_LIBRARY_PATH="${TOOLCHAIN}/lib:${LD_LIBRARY_PATH}" make HOSTCC="${HOST_CC}" HOSTCFLAGS="-I${TOOLCHAIN}/include" HOSTLDFLAGS="-L${TOOLCHAIN}/lib -Wl,-rpath,${TOOLCHAIN}/lib -lssl -lcrypto" HOSTSTRIP="true" CONFIG_MKIMAGE_DTC_PATH="scripts/dtc/dtc"

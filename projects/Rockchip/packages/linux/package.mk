@@ -4,7 +4,7 @@
 # Copyright (C) 2021-present AmberELEC (https://github.com/AmberELEC)
 
 PKG_NAME="linux"
-if [[ "${DEVICE}" =~ (RG351|RK3326) ]]; then
+if [[ "${DEVICE}" =~ (RG351|R36S|RK3326) ]]; then
   PKG_VERSION="df3ecc24e0466b973d79170bb228912b8f83cf92"
   PKG_URL="https://github.com/AmberELEC/kernel_rg351/archive/${PKG_VERSION}.tar.gz"
 elif [[ "${DEVICE}" =~ (RG552|RK3399) ]]; then
@@ -261,6 +261,9 @@ makeinstall_target() {
         cp -v ${dtb} ${INSTALL}/usr/share/bootloader
       fi
     done
+    if [ "${DEVICE}" = "R36S" ]; then
+      cp -v "${ROOT}/soysauce/rk3326-r35s-linux.dtb" ${INSTALL}/usr/share/bootloader
+    fi
   elif [ "${BOOTLOADER}" = "bcm2835-bootloader" ]; then
     mkdir -p ${INSTALL}/usr/share/bootloader/overlays
 

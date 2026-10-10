@@ -18,7 +18,7 @@ export PROJECT=Rockchip
 
 # Early validation: Verify base toolchain template exists before starting the build
 BASE_TEMPLATE_DEVICE=""
-if [[ "${DEVICE}" =~ ^(RG351P|RG351V|RG351MP)$ ]]; then
+if [[ "${DEVICE}" =~ ^(RG351P|RG351V|RG351MP|R36S)$ ]]; then
   BASE_TEMPLATE_DEVICE="RK3326"
 elif [[ "${DEVICE}" =~ ^(RG552)$ ]]; then
   BASE_TEMPLATE_DEVICE="RK3399"
