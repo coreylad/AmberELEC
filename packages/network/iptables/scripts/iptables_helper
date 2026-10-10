@@ -9,13 +9,7 @@ IPTABLES_CMDS="$IPTABLES4 $IPTABLES6"
 PUBLIC_RULES="/etc/iptables/public.v"
 HOME_RULES="/etc/iptables/home.v"
 CUSTOM_RULES="/storage/.config/iptables/rules.v"
-DOCKER="service.system.docker.service"
-SYSTEMCTL="/usr/bin/systemctl"
 CONNMANCTL="/usr/bin/connmanctl"
-
-check_docker() {
-  $SYSTEMCTL is-active --quiet $DOCKER && $SYSTEMCTL restart $DOCKER
-}
 
 get_technology_config() {
   $CONNMANCTL technologies | awk -v pattern="^/.*/technology/$1$" -e 'BEGIN {S=0}; /^\/.*/ {S=0}; $0 ~ pattern {S=1}; S==1 {print $0}'
@@ -44,7 +38,6 @@ flush() {
     $cmd -P FORWARD ACCEPT
     $cmd -P OUTPUT ACCEPT
   done
-  check_docker
   check_tether
 }
 
@@ -64,7 +57,6 @@ enable() {
       "$cmd-restore" "$rules" 
     fi
   done
-  check_docker
   check_tether
 }
 
